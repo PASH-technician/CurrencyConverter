@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        setUpTabs()
+
         registerReceiver(dateChangeReceiver, dateChangeFilter)
         registerReceiver(checkChangeInternetConnect, internetConnectFilter)
     }
@@ -99,5 +101,11 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(INTERNET_CHENG)
         val pendingIntent = PendingIntent.getBroadcast(appContext, 0, intent, 0)
         alarmManager[AlarmManager.RTC_WAKEUP, DATE_UPDATE_INFO.timeInMillis] = pendingIntent
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(dateChangeReceiver)
+        unregisterReceiver(checkChangeInternetConnect)
     }
 }

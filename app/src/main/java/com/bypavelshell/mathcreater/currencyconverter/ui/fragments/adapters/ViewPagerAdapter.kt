@@ -1,4 +1,4 @@
-package com.bypavelshell.mathcreater.currencyconverter.fragments.adapters
+package com.bypavelshell.mathcreater.currencyconverter.ui.fragments.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

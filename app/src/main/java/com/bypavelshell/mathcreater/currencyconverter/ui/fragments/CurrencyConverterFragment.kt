@@ -1,4 +1,4 @@
-package com.bypavelshell.mathcreater.currencyconverter.fragments
+package com.bypavelshell.mathcreater.currencyconverter.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
