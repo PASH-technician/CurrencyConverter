@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DATE_UPDATE_INFO.set(Calendar.HOUR_OF_DAY, 22)
-        DATE_UPDATE_INFO.set(Calendar.MINUTE, 19)
+        DATE_UPDATE_INFO.set(Calendar.HOUR_OF_DAY, 24)
+        DATE_UPDATE_INFO.set(Calendar.MINUTE, 0)
         DATE_UPDATE_INFO.set(Calendar.SECOND, 0)
         DATE_UPDATE_INFO.set(Calendar.MILLISECOND, 0)
 
@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(currencyFragment, "Курсы валют")
 
         val currencyConverterFragment = CurrencyConverterFragment()
+        liveDataCurrencyConverterFragment = currencyConverterFragment.liveData
         adapter.addFragment(currencyConverterFragment, "Конвертер")
 
         viewPager.adapter = adapter
@@ -151,13 +152,18 @@ class MainActivity : AppCompatActivity() {
             .format(toYesterday.time)
 
         val currencyRateModel = DownloadJson()
-            .execute("https://www.cbr-xml-daily.ru//archive//$data//daily_json.js")
+            .execute("https://www.cbr-xml-daily.ru//daily_json.js")
             .get()
 
 
         if (::liveDataCurrencyFragment.isInitialized){
             liveDataCurrencyFragment.value = currencyRateModel
 
+            checkNewInfoCurrencies = false
+        }
+
+        if (::liveDataCurrencyConverterFragment.isInitialized){
+            liveDataCurrencyConverterFragment.value = currencyRateModel
             checkNewInfoCurrencies = false
         }
     }

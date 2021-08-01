@@ -8,4 +8,8 @@ data class Currency(
     var name: String?,
     var value: Double?,
     var previous: Double?,
-)
+){
+    override fun toString(): String {
+        return "$charCode $name"
+    }
+}

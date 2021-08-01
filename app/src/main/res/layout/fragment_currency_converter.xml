@@ -8,12 +8,13 @@
 
     <Spinner
         android:id="@+id/choosingFirstCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="@+id/choosingSecondCurrency"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout"
-        tools:entries="@array/CurrencyRUB" />
+        tools:entries="@array/CurrencyRUB"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -35,24 +36,23 @@
 
     <Spinner
         android:id="@+id/choosingSecondCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         android:layout_marginStart="24dp"
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout2"
-        tools:entries="@array/CurrencyEUR" />
+        tools:entries="@array/CurrencyEUR"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/choosingSecondCurrency"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
@@ -66,12 +66,13 @@
 
     <Spinner
         android:id="@+id/choosingThirdCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
         app:layout_constraintStart_toStartOf="@+id/choosingSecondCurrency"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
-        tools:entries="@array/CurrencyUSD" />
+        tools:entries="@array/CurrencyUSD"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout3"
@@ -79,11 +80,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
         app:layout_constraintStart_toEndOf="@+id/choosingThirdCurrency"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.36">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/thirdCurrencyInput"
