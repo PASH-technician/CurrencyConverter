@@ -5,7 +5,7 @@ import org.json.simple.parser.JSONParser
 
 
 class SimpleParser {
-    fun parser(stringJson: String): CurrencyRateModel? {
+    fun parser(stringJson: String): CurrencyModel? {
 
 
         val root: JSONObject = JSONParser().parse(stringJson) as JSONObject
@@ -29,7 +29,7 @@ class SimpleParser {
                 )
             }
 
-            return CurrencyRateModel(
+            return CurrencyModel(
                 date = root["Date"] as String,
                 previousDate = root["PreviousDate"] as String,
                 currencies = listCurrency

@@ -9,14 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bypavelshell.mathcreater.currencyconverter.R
-import com.bypavelshell.mathcreater.currencyconverter.data.Currency
+import com.bypavelshell.mathcreater.currencyconverter.data.CurrencyModel
 import kotlinx.android.synthetic.main.item_currency.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CurrencyListAdapter(
-    currencyList: MutableList<Currency>,
+    var currenciesInfo: CurrencyModel
 ) : RecyclerView.Adapter<CurrencyListAdapter.ItemCurrency>() {
-
-    var currencyList = currencyList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemCurrency {
         val context = parent.context
@@ -28,11 +28,11 @@ class CurrencyListAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemCurrency, position: Int) {
-        holder.charCode.text = currencyList[position].charCode
-        holder.name.text = currencyList[position].name
-        val currencyToDay = currencyList[position].value
+        holder.charCode.text = currenciesInfo.currencies[position].charCode
+        holder.name.text = currenciesInfo.currencies[position].name
+        val currencyToDay = currenciesInfo.currencies[position].value
         holder.valueToDay.text = currencyToDay.toString()
-        val currencyYesterday = currencyList[position].previous
+        val currencyYesterday = currenciesInfo.currencies[position].previous
         holder.valueYesterday.text = currencyYesterday.toString()
 
         when {
@@ -40,15 +40,15 @@ class CurrencyListAdapter(
                 holder.changingCurrency.visibility = View.VISIBLE
                 holder.changingCurrencyValue.visibility = View.VISIBLE
                 holder.changingCurrency.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
-                holder.changingCurrencyValue.text = "+${currencyToDay - currencyYesterday}"
-                holder.changingCurrencyValue.setTextColor(Color.parseColor(R.color.exchange_rate_up.toString()))
+                holder.changingCurrencyValue.text = "+${BigDecimal.valueOf(currencyToDay - currencyYesterday).setScale(4, RoundingMode.HALF_UP)}"
+                holder.changingCurrencyValue.setTextColor(Color.parseColor("#FF0000"))
             }
             currencyToDay < currencyYesterday -> {
                 holder.changingCurrency.visibility = View.VISIBLE
                 holder.changingCurrencyValue.visibility = View.VISIBLE
                 holder.changingCurrency.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
-                holder.changingCurrencyValue.text = (currencyToDay - currencyYesterday).toString()
-                holder.changingCurrencyValue.setTextColor(Color.parseColor(R.color.exchange_rate_drop.toString()))
+                holder.changingCurrencyValue.text = (BigDecimal.valueOf(currencyToDay - currencyYesterday).setScale(4, RoundingMode.HALF_UP)).toString()
+                holder.changingCurrencyValue.setTextColor(Color.parseColor("#00FF23"))
             }
             else -> {
                 holder.changingCurrency.visibility = View.INVISIBLE
@@ -58,7 +58,7 @@ class CurrencyListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return currencyList.size
+        return currenciesInfo.currencies.size
     }
 
     class ItemCurrency(itemView: View) : RecyclerView.ViewHolder(itemView) {

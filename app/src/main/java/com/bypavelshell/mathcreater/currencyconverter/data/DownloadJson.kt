@@ -4,8 +4,8 @@ import android.os.AsyncTask
 import java.net.HttpURLConnection
 import java.net.URL
 
-class DownloadJson : AsyncTask<String, Unit, CurrencyRateModel>() {
-    override fun doInBackground(vararg params: String?): CurrencyRateModel? {
+class DownloadJson : AsyncTask<String, Unit, CurrencyModel>() {
+    override fun doInBackground(vararg params: String?): CurrencyModel? {
         val url = URL(params[0])
         val urlConnection = url.openConnection() as HttpURLConnection
         try {

@@ -1,6 +1,21 @@
 <resources>
     <string name="app_name">Currency Converter</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="text_currency">Currency</string>
-    <string name="text_currency_converter">Currency converter</string>
+    <string name="text_currency">Нет доступа к интернету</string>
+    <string name="text_currency_converter">Converter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="CurrencyRate">Курсы валют</string>
+
+    <string-array name="CurrencyRUB">
+        <item>RUB</item>
+    </string-array>
+
+    <string-array name="CurrencyEUR">
+        <item>EUR</item>
+    </string-array>
+
+    <string-array name="CurrencyUSD">
+        <item>USD</item>
+    </string-array>
 </resources>

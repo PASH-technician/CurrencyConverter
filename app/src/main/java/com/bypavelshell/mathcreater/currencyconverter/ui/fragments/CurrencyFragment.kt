@@ -1,61 +1,62 @@
 package com.bypavelshell.mathcreater.currencyconverter.ui.fragments
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.bypavelshell.mathcreater.currencyconverter.R
-import com.bypavelshell.mathcreater.currencyconverter.data.CurrencyRateModel
+import com.bypavelshell.mathcreater.currencyconverter.data.CurrencyModel
 import com.bypavelshell.mathcreater.currencyconverter.ui.fragments.adapters.CurrencyListAdapter
-import kotlinx.android.synthetic.main.fragment_currency.*
-
-
+import kotlinx.android.synthetic.main.fragment_currency.view.*
 
 
 class CurrencyFragment : Fragment() {
 
-    private var adapter: CurrencyListAdapter? = null
-    var currencies: CurrencyRateModel? = null
+    private lateinit var loadingCurrencyInfo: ProgressBar
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var toDayDate: TextView
+    private lateinit var toYesterdayDate: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun loadInfoCurrencyList(currencies: CurrencyRateModel) {
-        currencyList.setOnRefreshListener {
-            adapter!!.currencyList = currencies.currencies
-            adapter!!.notifyDataSetChanged()
-        }
-    }
-
-    private fun checkInternetConnect(): Boolean {
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        var wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        if (wifiInfo != null && wifiInfo.isConnected) return true
-
-        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-        if (wifiInfo != null && wifiInfo.isConnected) return true
-        wifiInfo = cm.activeNetworkInfo
-        if (wifiInfo != null && wifiInfo.isConnected) return true
-
-        return false
-    }
+    val liveData = MutableLiveData<CurrencyModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_currency, container, false)
+        val view = inflater.inflate(R.layout.fragment_currency, container, false)
+
+        loadingCurrencyInfo = view.loadingCurrencyInfo
+        recyclerView = view.recyclerView
+        toDayDate = view.toDayDate
+        toYesterdayDate = view.toYesterdayDate
+
+        recyclerView.visibility = View.INVISIBLE
+        loadingCurrencyInfo.visibility = View.VISIBLE
+
+        return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        liveData.observe(this.viewLifecycleOwner){
+            val adapter = CurrencyListAdapter(it)
+            recyclerView.adapter = adapter
+            recyclerView.visibility = View.VISIBLE
+            loadingCurrencyInfo.visibility = View.INVISIBLE
+            toDayDate.text = formatDateString(it.previousDate!!.subSequence(0..9))
+            toDayDate.visibility = View.VISIBLE
+            toYesterdayDate.text = formatDateString(it.date!!.subSequence(0..9))
+            toYesterdayDate.visibility = View.VISIBLE
+        }
+    }
+
+    private fun formatDateString(date: CharSequence): String{
+        val resultString = date.split("-")
+        return "${resultString[2]}.${resultString[1]}.${resultString[0]}"
     }
 }
