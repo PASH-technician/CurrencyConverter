@@ -31,6 +31,7 @@
             android:id="@+id/firstCurrencyInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="number"
             tools:hint="Российский рубль" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,35 +62,8 @@
             android:id="@+id/seconCurrencyInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="number"
             tools:hint="Евро" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Spinner
-        android:id="@+id/choosingThirdCurrency"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
-        app:layout_constraintStart_toStartOf="@+id/choosingSecondCurrency"
-        app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
-        tools:entries="@array/CurrencyUSD"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
-        app:layout_constraintStart_toEndOf="@+id/choosingThirdCurrency"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/thirdCurrencyInput"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:hint="Доллар США" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

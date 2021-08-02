@@ -17,18 +17,17 @@ import com.bypavelshell.mathcreater.currencyconverter.data.CurrencyModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_currency_converter.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CurrencyConverterFragment : Fragment() {
 
     private lateinit var choosingFirstCurrency: Spinner
     private lateinit var firstCurrencyInput: TextInputEditText
-    private lateinit var textInputLayout: TextInputLayout
+    private lateinit var textInputLayoutFirst: TextInputLayout
     private lateinit var choosingSecondCurrency: Spinner
     private lateinit var secondCurrencyInput: TextInputEditText
-    private lateinit var textInputLayout2: TextInputLayout
-    private lateinit var choosingThirdCurrency: Spinner
-    private lateinit var thirdCurrencyInput: TextInputEditText
-    private lateinit var textInputLayout3: TextInputLayout
+    private lateinit var textInputLayoutSecond: TextInputLayout
 
     val liveData = MutableLiveData<CurrencyModel>()
 
@@ -40,15 +39,11 @@ class CurrencyConverterFragment : Fragment() {
 
         choosingFirstCurrency = view.choosingFirstCurrency
         firstCurrencyInput = view.firstCurrencyInput
-        textInputLayout = view.textInputLayout
+        textInputLayoutFirst = view.textInputLayout
 
         choosingSecondCurrency = view.choosingSecondCurrency
         secondCurrencyInput = view.seconCurrencyInput
-        textInputLayout2 = view.textInputLayout2
-
-        choosingThirdCurrency = view.choosingThirdCurrency
-        thirdCurrencyInput = view.thirdCurrencyInput
-        textInputLayout3 = view.textInputLayout3
+        textInputLayoutSecond = view.textInputLayout2
 
         return view
     }
@@ -69,41 +64,38 @@ class CurrencyConverterFragment : Fragment() {
                     creatingListCurrencies(it.currencies)
                 )
             }
-            choosingThirdCurrency.adapter = this.context?.let { context ->
-                ArrayAdapter(
-                    context, R.layout.dropdown_item,
-                    creatingListCurrencies(it.currencies)
-                )
-            }
 
             choosingFirstCurrency.onItemSelectedListener =
-                selectedListener(it.currencies, textInputLayout)
+                selectedListener(it.currencies, textInputLayoutFirst)
 
             choosingSecondCurrency.onItemSelectedListener =
-                selectedListener(it.currencies, textInputLayout2)
+                selectedListener(it.currencies, textInputLayoutSecond)
 
-            choosingThirdCurrency.onItemSelectedListener =
-                selectedListener(it.currencies, textInputLayout3)
 
             firstCurrencyInput.addTextChangedListener(object : TextWatcher{
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int,
-                ) {
-                    TODO("Not yet implemented")
-                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int, ) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    
+                    if(firstCurrencyInput.hasFocus())
+                        firstTextUpdate(s, it.currencies)
                 }
 
-                override fun afterTextChanged(s: Editable?) {
-                    TODO("Not yet implemented")
-                }
-
+                override fun afterTextChanged(s: Editable?) {}
             })
+
+            secondCurrencyInput.addTextChangedListener(object : TextWatcher{
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int, ) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if(secondCurrencyInput.hasFocus())
+                        secondTextUpdate(s, it.currencies)
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
+            firstCurrencyInput.onFocusChangeListener = changeFocusListener()
+            secondCurrencyInput.onFocusChangeListener = changeFocusListener()
         }
     }
 
@@ -119,11 +111,61 @@ class CurrencyConverterFragment : Fragment() {
                 id: Long,
             ) {
                 textInputLayout.hint = currencies[position].name
+                if(firstCurrencyInput.hasFocus()){
+                    firstTextUpdate(firstCurrencyInput.text, currencies)
+                }else if(secondCurrencyInput.hasFocus()){
+                    secondTextUpdate(secondCurrencyInput.text, currencies)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
+        }
+    }
+
+    private fun changeFocusListener(): View.OnFocusChangeListener{
+        return View.OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus){
+                (v as TextInputEditText).setText("1")
+            }
+        }
+    }
+
+    private fun firstTextUpdate(firstText: CharSequence?, currencies: MutableList<Currency>){
+        if (firstText.toString() != ""){
+            val firstCurrency = currencies[choosingFirstCurrency.selectedItemPosition]
+                .value
+
+            val secondCurrency = currencies[choosingSecondCurrency.selectedItemPosition]
+                .value
+
+            val value = BigDecimal.valueOf(firstCurrency!! * firstText.toString()
+                .toDouble() / secondCurrency!!).setScale(4, RoundingMode.HALF_UP).stripTrailingZeros()
+            secondCurrencyInput
+                .setText(value.toString())
+
+        }else if(firstCurrencyInput.focusable == View.FOCUSABLE){
+            secondCurrencyInput.setText("")
+        }
+    }
+
+    private fun secondTextUpdate(firstText: CharSequence?, currencies: MutableList<Currency>){
+        if (firstText.toString() != "" && secondCurrencyInput.focusable == View.FOCUSABLE){
+            val secondCurrency = currencies[choosingSecondCurrency.selectedItemPosition]
+                .value
+
+            val firstCurrency = currencies[choosingFirstCurrency.selectedItemPosition]
+                .value
+
+            val value = BigDecimal.valueOf(secondCurrency!! * firstText.toString()
+                .toDouble() / firstCurrency!!).setScale(4, RoundingMode.HALF_UP).stripTrailingZeros()
+
+            firstCurrencyInput
+                .setText(value.toString())
+
+        }else if (secondCurrencyInput.focusable == View.FOCUSABLE){
+            firstCurrencyInput.setText("")
         }
     }
 

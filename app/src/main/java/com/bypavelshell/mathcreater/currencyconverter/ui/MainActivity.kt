@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.bypavelshell.mathcreater.currencyconverter.R
@@ -23,7 +22,6 @@ import com.bypavelshell.mathcreater.currencyconverter.ui.fragments.adapters.View
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URL
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -38,9 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var checkChangeInternetConnect: BroadcastReceiver
     private lateinit var dateChangeReceiver: BroadcastReceiver
 
-    private var toDayDate = Calendar.getInstance()
-    private var toYesterday = Calendar.getInstance()
-
     private lateinit var liveDataCurrencyFragment: MutableLiveData<CurrencyModel>
     private lateinit var liveDataCurrencyConverterFragment: MutableLiveData<CurrencyModel>
 
@@ -54,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         DATE_UPDATE_INFO.set(Calendar.MINUTE, 0)
         DATE_UPDATE_INFO.set(Calendar.SECOND, 0)
         DATE_UPDATE_INFO.set(Calendar.MILLISECOND, 0)
-
-        toYesterday.add(Calendar.DATE, -1)
 
         setUpTabs()
 
@@ -89,10 +82,7 @@ class MainActivity : AppCompatActivity() {
                 if (intent.action.equals(INTERNET_CHENG))
                     Log.d("TAG","Вот и наступило завтра")
 
-                Toast.makeText(context, "dateChangeReceiver", Toast.LENGTH_LONG).show()
-
                 if (Calendar.getInstance().time.minutes == DATE_UPDATE_INFO.time.minutes) {
-                    Toast.makeText(context, "сменилась дата", Toast.LENGTH_LONG).show()
                     checkNewInfoCurrencies = true
 
                     if (checkInternetConnect && checkNewInfoCurrencies){
@@ -148,11 +138,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateInfoCurrencies() {
-        val data = SimpleDateFormat("yyyy//MM//dd", Locale.getDefault())
-            .format(toYesterday.time)
-
         val currencyRateModel = DownloadJson()
-            .execute("https://www.cbr-xml-daily.ru//daily_json.js")
+            .execute("https://www.cbr-xml-daily.ru/daily_json.js")
             .get()
 
 
